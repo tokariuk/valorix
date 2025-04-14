@@ -43,6 +43,56 @@ function RouteComponent() {
         status: 'pending',
         reward: 5000,
       });
+      addTask({
+        id: '3',
+        type: 'link',
+        link: 'https://t.me/blum/app?startapp=ref_PCSLlqjcHu',
+        title: 'Launch Blum',
+        category: "special",
+        visual: { type: "image", src: "https://s2.coinmarketcap.com/static/img/coins/200x200/33154.png" },
+        status: 'pending',
+        reward: 10000,
+      });
+      addTask({
+        id: '4',
+        type: 'link',
+        link: 'https://t.me/tapswap_mirror_bot?start=r_6130589912',
+        title: 'Launch TapSwap',
+        category: "special",
+        visual: { type: "image", src: "https://minitelegram.com/wp-content/uploads/2024/11/tapswap-logo.webp" },
+        status: 'pending',
+        reward: 10000,
+      });
+      addTask({
+        id: '5',
+        type: 'link',
+        link: 'https://t.me/OKX_official_bot/OKX_Racer?startapp=linkCode_103789641',
+        title: 'Launch OKX Racer',
+        category: "special",
+        visual: { type: "image", src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAgO2wJUYUmF3nb6cj6k1Y_C6xkrqBQCApQg&s" },
+        status: 'pending',
+        reward: 10000,
+      });
+      addTask({
+        id: '6',
+        type: 'link',
+        link: 'https://t.me/dotcoin_bot?start=r_6130589912',
+        title: 'Launch Dotcoin',
+        category: "special",
+        visual: { type: "image", src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYMeh5iHtrfGV0vLXrTHw1D_TTxDjywZkwpw&s" },
+        status: 'pending',
+        reward: 10000,
+      });
+      addTask({
+        id: '7',
+        type: 'link',
+        link: 'https://t.me/Binance_Moonbix_bot/start?startApp=ref_6130589912&startapp=ref_6130589912&utm_medium=web_share_copy',
+        title: 'Launch Binance Moonbix',
+        category: "special",
+        visual: { type: "image", src: "https://i0.wp.com/airdropalert.com/wp-content/uploads/2024/09/Binance-Moonbix.jpg?w=1080&quality=50&ssl=1" },
+        status: 'pending',
+        reward: 10000,
+      });
 
       addTask({
         id: 'i1',
@@ -119,7 +169,7 @@ function RouteComponent() {
             <div className="flex items-center space-x-3">
               {task.visual.type === "iconify" ?
                 <Icon icon={task.visual.iconName} className='size-8' /> :
-                <img src={task.visual.src} alt="task" className="size-8" />
+                <img src={task.visual.src} alt="task" className="size-8 rounded-2xl" />
               }
               <div>
                 <h1 className="font-semibold leading-tight">{task.title}</h1>
@@ -191,6 +241,10 @@ function RouteComponent() {
         </TabsContent>
 
       </Tabs>
+
+      <div style={{
+        height: "calc(var(--tg-safe-area-inset-bottom) + 64px)"
+      }} />
     </>
   );
 }

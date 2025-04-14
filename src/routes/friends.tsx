@@ -5,15 +5,38 @@ import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, Dr
 import { Separator } from '@/components/ui/separator';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { createFileRoute } from '@tanstack/react-router'
-import { BookUser, Copy, HandCoins, Handshake, HeartHandshake, List, Send, UserPlus, Users } from 'lucide-react';
+import { BookUser, Check, Copy, HandCoins, Handshake, HeartHandshake, List, Send, UserPlus, Users } from 'lucide-react';
 
 import QRCode from '@/assets/QRCode.jpg'
+import { useState } from 'react';
 
 export const Route = createFileRoute('/friends')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
+  const [copied, setCopied] = useState(false);
+  const textToCopy = "https://t.me/valorix_tgbot?start=r_78349209430";
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(textToCopy);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1250); // Показати повідомлення на 2 сек
+    } catch (err) {
+      console.error('Не вдалося скопіювати: ', err);
+    }
+  };
+
+  const handleShare = () => {
+    const text = "Join Valorix and let`s earn together!";
+    const message = encodeURIComponent(text);
+
+    const tgShareLink = `https://t.me/share/url?url=${textToCopy}&text=${message}`;
+
+    window.Telegram.WebApp.openTelegramLink(tgShareLink)
+  };
+
   return (<>
     <div className="flex items-center gap-3 mb-4">
       <HeartHandshake size={38} strokeWidth={1.75} />
@@ -96,10 +119,10 @@ function RouteComponent() {
     </Card>
 
     <div className="flex flex-col w-full">
-      <span className='h-2'/>
-      <span className='h-16'/>
-      <span className='h-[var(--tg-safe-area-inset-bottom)]'/>
-      <span className='h-[var(--tg-safe-area-inset-bottom)]'/>
+      <span className='h-2' />
+      <span className='h-16' />
+      <span className='h-[var(--tg-safe-area-inset-bottom)]' />
+      <span className='h-[var(--tg-safe-area-inset-bottom)]' />
     </div>
 
     <div className='bg-background/25 backdrop-blur-md fixed flex justify-center p-2 w-full left-0' style={{
@@ -125,8 +148,8 @@ function RouteComponent() {
 
           <DrawerFooter>
             <div className='flex gap-3'>
-              <Button className='flex-1'><Send /> Send invite</Button>
-              <Button variant={"secondary"}><Copy /></Button>
+              <Button className='flex-1' onClick={handleShare}><Send /> Send invite</Button>
+              <Button variant={"secondary"} onClick={handleCopy}>{copied ? <Check /> : <Copy />}</Button>
             </div>
             <DrawerClose>
               <Button variant="link" className='text-destructive'>Cancel</Button>
@@ -135,5 +158,9 @@ function RouteComponent() {
         </DrawerContent>
       </Drawer>
     </div>
+
+    <div style={{
+      height: "calc(var(--tg-safe-area-inset-bottom) + 24px)"
+    }} />
   </>);
 }

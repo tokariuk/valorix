@@ -56,7 +56,7 @@ export const MiningArea = () => {
         onTouchEnd={handleMouseUp}
         onTouchCancel={handleMouseUp}
       >
-        <img className="size-72 select-none" src={valorixCoin} style={{
+        <img className="size-60 select-none" src={valorixCoin} style={{
           pointerEvents: 'none',
           userSelect: 'none',
           transform: isPressed ? 'translateY(4px)' : 'translateY(0px)',
