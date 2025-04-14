@@ -11,7 +11,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "preview:worker": "npm run build && wrangler dev",
-    "deploy:worker": "wrangler deploy"
+    "deploy:worker": "npm run build && wrangler deploy"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.3",
