@@ -4,7 +4,10 @@ import NavigationMenu from '@/components/navigation'
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useGameStore } from '@/store/game-store';
-import { createRootRoute, Outlet } from '@tanstack/react-router'
+import { createRootRoute, Outlet, useNavigate } from '@tanstack/react-router'
+import { useEffect, useRef, useState } from 'react';
+import gif from "@/assets/congrats.gif"
+import lastFrame from "@/assets/congrats_last_frame.png"
 
 if (window.visualViewport) {
   window.visualViewport.addEventListener('resize', () => {
@@ -17,38 +20,76 @@ window.addEventListener('scroll', () => {
 });
 
 export const Route = createRootRoute({
-  component: () => (
-    <main className='flex flex-col p-3 gap-3 max-w-md mx-auto w-screen' style={{
-      minHeight: "calc(var(--tg-viewport-stable-height) - 64px)",
-      paddingTop:
-        "calc(var(--tg-content-safe-area-inset-top) + var(--tg-safe-area-inset-top) + 0.75rem)",
-      paddingBottom: "calc(var(--tg-safe-area-inset-bottom) + 64px + 0.75rem))",
-    }}>
-      <Dialog open={useGameStore((state) => state.points) >= 25000}>
-        <DialogContent>
-          <DialogHeader className='items-center'>
-            <DialogTitle>
-              You will be rewarded!
-            </DialogTitle>
-            <DialogDescription>
-              Connect your wallet to collect reward!
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button
-              className="font-semibold mx-auto"
-              onClick={window.openButton}
-              size={"default"}
-            >
-              <TonIcon className='size-5' />
-              Connect Wallet
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-      <Outlet />
-      {/* <TanStackRouterDevtools /> */}
-      <NavigationMenu />
-    </main>
-  ),
-})
+  component: () => {
+    const [isLoading, setIsLoading] = useState(true);
+    const points = useGameStore().points;
+
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+      }, 1500);
+      return () => clearTimeout(timer);
+    }, []);
+
+    const [isDone, setIsDone] = useState(false);
+
+    useEffect(() => {
+      if (points >= 15000) {
+        const duration = 3020; // в мілісекундах (тривалість GIF)
+        const timer = setTimeout(() => {
+          setIsDone(true);
+        }, duration);
+      }
+    }, [points]);
+
+    return (
+      <main className='flex flex-col p-3 gap-3 max-w-md mx-auto w-screen relative' style={{
+        minHeight: "calc(var(--tg-viewport-stable-height) - 64px)",
+        paddingTop: "calc(var(--tg-content-safe-area-inset-top) + var(--tg-safe-area-inset-top) + 0.75rem)",
+        paddingBottom: "calc(var(--tg-safe-area-inset-bottom) + 64px + 0.75rem))",
+      }}>
+        {isLoading && (
+          <div className="fixed inset-0 bg-background z-50 flex items-center justify-center">
+            <div className="animate-spin rounded-full h-10 w-10 border-4 border-primary border-t-transparent" />
+          </div>
+        )}
+
+        <Outlet />
+        <NavigationMenu />
+
+        {useGameStore((state) => state.points >= 15000) ? <div className="w-screen h-screen bg-black/50 inset-0 fixed z-50" /> : undefined}
+        <Dialog open={useGameStore((state) => state.points) >= 15000} modal={false}>
+          <DialogContent>
+            <div className='relative w-full'>
+              <img
+                src={isDone ? lastFrame : gif}
+                alt="congrats"
+                className='size-28 mx-auto object-cover opacity-30'
+              />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-3xl font-bold drop-shadow-sm">
+                  Congratulations!
+                </span>
+              </div>
+            </div>
+            <DialogHeader className='items-center'>
+              <DialogDescription>
+                Connect your wallet to collect reward!
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button
+                className="font-semibold mx-auto"
+                onClick={window.openButton}
+              >
+                <TonIcon className='size-5' />
+                Connect Wallet
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </main>
+    );
+  },
+});
+

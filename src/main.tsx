@@ -30,6 +30,8 @@ tg.enableClosingConfirmation()
 const rootElement = document.getElementById('root')!
 if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
+  const isLoading = true
+
   root.render(
     //<StrictMode>
       <Provider>

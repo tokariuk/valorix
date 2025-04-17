@@ -142,10 +142,10 @@ function RouteComponent() {
       navigate({ to: taskLink })
       return;
     }
-    if (taskLink?.startsWith("https://t.me")) {
+    else if (taskLink?.startsWith("https://t.me")) {
       window.Telegram.WebApp.openTelegramLink(taskLink)
     }
-    if (taskLink) {
+    else {
       window.Telegram.WebApp.openLink(taskLink)
     }
     updateTaskStatus(taskId, 'loading');
@@ -159,13 +159,28 @@ function RouteComponent() {
     claimTask(taskId);
   };
 
+  useEffect(() => {
+    const loadingTasks = tasks.filter(task => task.status === 'loading');
+
+    if (loadingTasks.length === 0) return;
+
+    const timer = setTimeout(() => {
+      loadingTasks.forEach(task => {
+        updateTaskStatus(task.id, 'claimable');
+      });
+    }, 2500);
+
+    return () => clearTimeout(timer);
+  }, [tasks, updateTaskStatus]);
+
+
   const renderTasks = (category: string) => {
     return tasks
       .filter(task => task.category === category)
       .sort((a, b) => (a.status === 'completed' ? 1 : 0) - (b.status === 'completed' ? 1 : 0))
       .map(task => (
         <div key={task.id}>
-          <div className="flex items-center justify-between h-14" style={{ opacity: task.status === "completed" ? 0.5 : 1 }}>
+          <div className="flex items-center justify-between h-16" style={{ opacity: task.status === "completed" ? 0.5 : 1 }}>
             <div className="flex items-center space-x-3">
               {task.visual.type === "iconify" ?
                 <Icon icon={task.visual.iconName} className='size-8' /> :
