@@ -46,6 +46,7 @@ interface Task {
   target?: number; // для завдання "дійти до певного рангу" – бажаний ранг
   status: 'pending' | 'loading' | 'claimable' | 'completed';
   reward: number;
+  startedAt?: number; // unix timestamp (Date.now())
 }
 
 interface GameState {
@@ -248,11 +249,17 @@ export const useGameStore = create<GameState>()(
         }));
       },
 
-      updateTaskStatus: (taskId: string, status: Task['status']) => {
+      updateTaskStatus: (taskId: string, status: Task['status'], startedAt?: number) => {
         set((state) => ({
-          tasks: state.tasks.map((task) =>
-            task.id === taskId ? { ...task, status } : task
-          ),
+          tasks: state.tasks.map(task =>
+            task.id === taskId
+              ? {
+                ...task,
+                status,
+                ...(startedAt !== undefined ? { startedAt } : {})
+              }
+              : task
+          )
         }));
       },
 
@@ -300,7 +307,7 @@ export const useGameStore = create<GameState>()(
       },
     }),
     {
-      name: 'game-storage2',
+      name: 'game-storage4',
       partialize: (state) => ({
         points: state.points,
         energy: state.energy,

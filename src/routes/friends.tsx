@@ -160,7 +160,7 @@ function RouteComponent() {
     </div>
 
     <div style={{
-      height: "calc(var(--tg-safe-area-inset-bottom) + 24px)"
+      height: "24px"
     }} />
   </>);
 }

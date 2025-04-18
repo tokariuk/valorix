@@ -35,7 +35,7 @@ export const Route = createRootRoute({
 
     useEffect(() => {
       if (points >= 15000) {
-        const duration = 3020; // в мілісекундах (тривалість GIF)
+        const duration = 3000; // в мілісекундах (тривалість GIF)
         const timer = setTimeout(() => {
           setIsDone(true);
         }, duration);
@@ -44,9 +44,9 @@ export const Route = createRootRoute({
 
     return (
       <main className='flex flex-col p-3 gap-3 max-w-md mx-auto w-screen relative' style={{
-        minHeight: "calc(var(--tg-viewport-stable-height) - 64px)",
         paddingTop: "calc(var(--tg-content-safe-area-inset-top) + var(--tg-safe-area-inset-top) + 0.75rem)",
-        paddingBottom: "calc(var(--tg-safe-area-inset-bottom) + 64px + 0.75rem))",
+        minHeight: "calc(var(--tg-viewport-height) - 64px)",
+        paddingBottom: "calc(var(--tg-content-safe-area-inset-bottom) + var(--tg-safe-area-inset-bottom) + 64px + 0.75rem))",
       }}>
         {isLoading && (
           <div className="fixed inset-0 bg-background z-50 flex items-center justify-center">

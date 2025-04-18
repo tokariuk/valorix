@@ -37,11 +37,13 @@ function Index() {
       <span className="text-3xl font-bold"><Points /></span>
     </div>
 
-    <div className='mx-auto my-auto mt-14'>
+    <div className="fixed w-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
       <MiningArea />
     </div>
 
-    <div className='mt-auto flex items-center'>
+    <div className='fixed flex justify-center p-4 w-full left-0 items-center' style={{
+      bottom: "calc(var(--tg-safe-area-inset-bottom) + var(--tg-content-safe-area-inset-bottom) + 64px)"
+    }}>
       <div className='mr-auto'>
         <Energy />
       </div>

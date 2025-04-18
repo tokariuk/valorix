@@ -22,6 +22,16 @@ function RouteComponent() {
   const addTask = useGameStore((state) => state.addTask);
 
   useEffect(() => {
+    const now = Date.now();
+    tasks.forEach(task => {
+      if (task.status === 'loading' && task.startedAt && now - task.startedAt >= 7500) {
+        updateTaskStatus(task.id, 'claimable');
+      }
+    });
+  }, [tasks, updateTaskStatus]);
+
+
+  useEffect(() => {
     if (tasks.length === 0) {
       addTask({
         id: '1',
@@ -148,7 +158,7 @@ function RouteComponent() {
     else {
       window.Telegram.WebApp.openLink(taskLink)
     }
-    updateTaskStatus(taskId, 'loading');
+    updateTaskStatus(taskId, 'loading', Date.now());
 
     setTimeout(() => {
       updateTaskStatus(taskId, 'claimable');
@@ -159,19 +169,19 @@ function RouteComponent() {
     claimTask(taskId);
   };
 
-  useEffect(() => {
-    const loadingTasks = tasks.filter(task => task.status === 'loading');
-
-    if (loadingTasks.length === 0) return;
-
-    const timer = setTimeout(() => {
-      loadingTasks.forEach(task => {
-        updateTaskStatus(task.id, 'claimable');
-      });
-    }, 2500);
-
-    return () => clearTimeout(timer);
-  }, [tasks, updateTaskStatus]);
+  //useEffect(() => {
+  //  const loadingTasks = tasks.filter(task => task.status === 'loading');
+  //
+  //  if (loadingTasks.length === 0) return;
+  //
+  //  const timer = setTimeout(() => {
+  //    loadingTasks.forEach(task => {
+  //      updateTaskStatus(task.id, 'claimable');
+  //    });
+  //  }, 2500);
+  //
+  //  return () => clearTimeout(timer);
+  //}, [tasks, updateTaskStatus]);
 
 
   const renderTasks = (category: string) => {

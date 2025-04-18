@@ -21,7 +21,7 @@ declare module '@tanstack/react-router' {
 const tg = window.Telegram.WebApp
 tg.ready()
 tg.expand()
-//tg.requestFullscreen()
+tg.requestFullscreen()
 tg.enableClosingConfirmation()
 
 
