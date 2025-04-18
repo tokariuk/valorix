@@ -85,9 +85,9 @@ export const useGameStore = create<GameState>()(
       maxEnergy: MAX_ENERGY,
       rank: 0,
       upgrades: {
-        pointsPerClick: { level: 1, cost: 100, effect: 1 },
-        maxEnergy: { level: 1, cost: 200, effect: 20 },
-        energyRegen: { level: 1, cost: 150, effect: 1 },
+        pointsPerClick: { level: 1, cost: 150, effect: 1 },
+        maxEnergy: { level: 1, cost: 150, effect: 50 },
+        energyRegen: { level: 1, cost: 150, effect: 1.5 },
       },
       tasks: [],
       tappingGuruBoost: {
@@ -281,7 +281,7 @@ export const useGameStore = create<GameState>()(
         set((state) => {
           const newUpgrade = {
             level: upgrade.level + 1,
-            cost: Math.floor(upgrade.cost * 1.1),
+            cost: Math.floor(upgrade.cost * 1.05),
             effect: upgrade.effect,
           };
           let newMaxEnergy = state.maxEnergy;
@@ -300,7 +300,7 @@ export const useGameStore = create<GameState>()(
       },
     }),
     {
-      name: 'game-storage',
+      name: 'game-storage2',
       partialize: (state) => ({
         points: state.points,
         energy: state.energy,

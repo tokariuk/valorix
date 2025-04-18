@@ -5,7 +5,6 @@
   "homepage": "https://tokariuk.github.io/valorix",
   "type": "module",
   "scripts": {
-    "deploy": "gh-pages -d build",
     "dev": "vite --host",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
