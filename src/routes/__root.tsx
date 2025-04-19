@@ -27,7 +27,7 @@ export const Route = createRootRoute({
     useEffect(() => {
       const timer = setTimeout(() => {
         setIsLoading(false);
-      }, 1500);
+      }, 1750);
       return () => clearTimeout(timer);
     }, []);
 
@@ -35,12 +35,15 @@ export const Route = createRootRoute({
 
     useEffect(() => {
       if (points >= 15000) {
-        const duration = 3000; // в мілісекундах (тривалість GIF)
-        const timer = setTimeout(() => {
+        if (isLoading) return; // ще не час
+
+        const gifTimer = setTimeout(() => {
           setIsDone(true);
-        }, duration);
+        }, 3000); // тривалість гіфки
+
+        return () => clearTimeout(gifTimer);
       }
-    }, [points]);
+    }, [points, isLoading]);
 
     return (
       <main className='flex flex-col p-3 gap-3 max-w-md mx-auto w-screen relative' style={{
@@ -57,8 +60,10 @@ export const Route = createRootRoute({
         <Outlet />
         <NavigationMenu />
 
-        {useGameStore((state) => state.points >= 15000) ? <div className="w-screen h-screen bg-black/50 inset-0 fixed z-50" /> : undefined}
-        <Dialog open={useGameStore((state) => state.points) >= 15000} modal={false}>
+        {useGameStore((state) => state.points) >= 15000 && !isLoading ?
+          <div className="w-screen h-screen bg-black/50 inset-0 fixed z-50" />
+          : undefined}
+        <Dialog open={points >= 15000 && !isLoading} modal={false}>
           <DialogContent>
             <div className='relative w-full'>
               <img
