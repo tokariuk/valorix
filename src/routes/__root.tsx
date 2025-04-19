@@ -66,11 +66,14 @@ export const Route = createRootRoute({
         <Dialog open={points >= 15000 && !isLoading} modal={false}>
           <DialogContent>
             <div className='relative w-full'>
+            {!isLoading ?
               <img
                 src={isDone ? lastFrame : gif}
                 alt="congrats"
                 className='size-28 mx-auto object-cover opacity-30'
               />
+              : undefined
+            }
               <div className="absolute inset-0 flex items-center justify-center">
                 <span className="text-3xl font-bold drop-shadow-sm">
                   Congratulations!
