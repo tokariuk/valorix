@@ -7,7 +7,7 @@ import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components
 import { createFileRoute } from '@tanstack/react-router'
 import { BookUser, Check, Copy, HandCoins, Handshake, HeartHandshake, List, Send, UserPlus, Users } from 'lucide-react';
 
-import QRCode from '@/assets/QRCode.jpg'
+import QRCode from '@/assets/QRCode.png'
 import { useState } from 'react';
 
 export const Route = createFileRoute('/friends')({
