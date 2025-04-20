@@ -86,9 +86,9 @@ export const useGameStore = create<GameState>()(
       maxEnergy: MAX_ENERGY,
       rank: 0,
       upgrades: {
-        pointsPerClick: { level: 1, cost: 150, effect: 1 },
-        maxEnergy: { level: 1, cost: 150, effect: 50 },
-        energyRegen: { level: 1, cost: 150, effect: 1.5 },
+        pointsPerClick: { level: 1, cost: 150, effect: 5 },
+        maxEnergy: { level: 1, cost: 150, effect: 100 },
+        energyRegen: { level: 1, cost: 150, effect: 2.5 },
       },
       tasks: [],
       tappingGuruBoost: {
@@ -276,7 +276,6 @@ export const useGameStore = create<GameState>()(
           ),
         }));
         get().updateRank();
-        toast.success("You`ve successfully completed the task")
       },
 
       upgrade: (type: UpgradeType) => {
@@ -307,7 +306,7 @@ export const useGameStore = create<GameState>()(
       },
     }),
     {
-      name: 'game-storage4',
+      name: 'game-storage6',
       partialize: (state) => ({
         points: state.points,
         energy: state.energy,

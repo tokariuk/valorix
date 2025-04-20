@@ -110,7 +110,7 @@ function Boosts() {
     if (type === 'pointsPerClick') {
       // Наприклад, Tap Power зростає за експоненційною шкалою
       const current = upgrade.level * upgrade.effect
-      const nextIncrease = (upgrade.effect + 1) * (upgrade.effect + 1) - current
+      const nextIncrease = upgrade.effect
       return { current, nextIncrease };
     }
 
@@ -123,7 +123,7 @@ function Boosts() {
     else if (type === 'energyRegen') {
       // Наприклад, Energy Recovery збільшується вдвічі на кожному рівні
       const current = ENERGY_REGEN_RATE + upgrade.effect * (upgrade.level - 1);
-      const nextIncrease = ENERGY_REGEN_RATE + (upgrade.effect + 1) * (upgrade.level + 1 - 1) - current;
+      const nextIncrease = upgrade.effect
       return { current, nextIncrease };
     }
 
@@ -140,17 +140,26 @@ function Boosts() {
     gameStore.activateTappingGuru();
     navigate({to: "/"})
     setDrawerOpen(false);
+    toast.success("Tapping Guru activated! Earn 10x points for 10 seconds");
   };
 
   // Для Full Tank: просто активуємо буст і закриваємо Drawer
   const handleActivateFullTank = () => {
     gameStore.activateFullTank();
     setDrawerOpen(false);
+    toast.success("Full Tank activated! Energy fully restored");
   };
 
   const handlePurchaseUpgrade = (upgradeType: 'pointsPerClick' | 'maxEnergy' | 'energyRegen') => {
     gameStore.upgrade(upgradeType);
     setDrawerOpen(false);
+    if (upgradeType === "pointsPerClick") {
+      toast.success("Tap Power upgraded! Earn more points with every tap");
+    } else if (upgradeType === "maxEnergy") {
+      toast.success("Energy Capacity upgraded! Now you can store even more energy");
+    } else if (upgradeType === "energyRegen") {
+      toast.success("Energy Regen upgraded! Your energy will recover faster");
+    }
   };
 
   return (
@@ -165,13 +174,13 @@ function Boosts() {
             {selectedCard?.type === 'upgrade$' && (
               <div className="mb-4">
                 {selectedCard.key === 'pointsPerClick' && (
-                  <div>
+                  <div className="flex gap-1">
                     <p>
                       Current Tap Power:{' '}
-                      {getUpgradeInfo('pointsPerClick').current}
+                      {getUpgradeInfo('pointsPerClick').current} per tap
                     </p>
-                    <p>
-                      Next Upgrade Increase: +{getUpgradeInfo('pointsPerClick').nextIncrease}
+                    <p className="text-muted-foreground">
+                      {" "}+{getUpgradeInfo('pointsPerClick').nextIncrease}
                     </p>
                   </div>
                 )}

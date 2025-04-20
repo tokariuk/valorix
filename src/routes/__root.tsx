@@ -8,6 +8,8 @@ import { createRootRoute, Outlet, useNavigate } from '@tanstack/react-router'
 import { useEffect, useRef, useState } from 'react';
 import gif from "@/assets/congrats.gif"
 import lastFrame from "@/assets/congrats_last_frame.png"
+import { AnimatePresence, motion } from 'framer-motion';
+import { useLocation } from '@tanstack/react-router';
 
 if (window.visualViewport) {
   window.visualViewport.addEventListener('resize', () => {
@@ -23,6 +25,7 @@ export const Route = createRootRoute({
   component: () => {
     const [isLoading, setIsLoading] = useState(true);
     const points = useGameStore().points;
+    const location = useLocation();
 
     useEffect(() => {
       const timer = setTimeout(() => {
@@ -57,45 +60,57 @@ export const Route = createRootRoute({
           </div>
         )}
 
-        <Outlet />
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={location.pathname}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="min-h-full"
+          >
+            <Outlet />
+          </motion.div>
+        </AnimatePresence>
+
+
         <NavigationMenu />
 
-        {useGameStore((state) => state.points) >= 15000 && !isLoading ?
-          <div className="w-screen h-screen bg-black/50 inset-0 fixed z-50" />
+        {points >= 15000 && !isLoading ?
+          <>
+            <Dialog open={true} modal={false}>
+              <DialogContent>
+                <div className='relative w-full'>
+                  <img
+                    src={isDone ? lastFrame : gif}
+                    alt="congrats"
+                    className='size-28 mx-auto object-cover opacity-30'
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="text-3xl font-bold drop-shadow-sm">
+                      Congratulations!
+                    </span>
+                  </div>
+                </div>
+                <DialogHeader className='items-center'>
+                  <DialogDescription>
+                    Connect your wallet to collect reward!
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                  <Button
+                    className="font-semibold mx-auto"
+                    onClick={window.openButton}
+                  >
+                    <TonIcon className='size-5' />
+                    Connect Wallet
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+            <div className="w-screen h-screen bg-black/50 inset-0 fixed z-50" />
+          </>
           : undefined}
-        <Dialog open={points >= 15000 && !isLoading} modal={false}>
-          <DialogContent>
-            <div className='relative w-full'>
-            {!isLoading ?
-              <img
-                src={isDone ? lastFrame : gif}
-                alt="congrats"
-                className='size-28 mx-auto object-cover opacity-30'
-              />
-              : undefined
-            }
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-3xl font-bold drop-shadow-sm">
-                  Congratulations!
-                </span>
-              </div>
-            </div>
-            <DialogHeader className='items-center'>
-              <DialogDescription>
-                Connect your wallet to collect reward!
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter>
-              <Button
-                className="font-semibold mx-auto"
-                onClick={window.openButton}
-              >
-                <TonIcon className='size-5' />
-                Connect Wallet
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
       </main>
     );
   },

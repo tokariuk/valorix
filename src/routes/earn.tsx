@@ -9,6 +9,7 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { Check, Loader, PiggyBank } from 'lucide-react';
 import { Icon } from "@iconify/react";
 import { useGameStore } from '@/store/game-store';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export const Route = createFileRoute('/earn')({
   component: RouteComponent,
@@ -167,6 +168,7 @@ function RouteComponent() {
 
   const handleClaim = (taskId: string) => {
     claimTask(taskId);
+    toast.success("You`ve successfully completed the task")
   };
 
   //useEffect(() => {
@@ -185,43 +187,56 @@ function RouteComponent() {
 
 
   const renderTasks = (category: string) => {
-    return tasks
+    const filteredTasks = tasks
       .filter(task => task.category === category)
-      .sort((a, b) => (a.status === 'completed' ? 1 : 0) - (b.status === 'completed' ? 1 : 0))
-      .map(task => (
-        <div key={task.id}>
-          <div className="flex items-center justify-between h-16" style={{ opacity: task.status === "completed" ? 0.5 : 1 }}>
-            <div className="flex items-center space-x-3">
-              {task.visual.type === "iconify" ?
-                <Icon icon={task.visual.iconName} className='size-8' /> :
-                <img src={task.visual.src} alt="task" className="size-8 rounded-2xl" />
-              }
-              <div>
-                <h1 className="font-semibold leading-tight">{task.title}</h1>
-                <p className="text-muted-foreground leading-tight">+{task.reward}</p>
+      .sort((a, b) => (a.status === 'completed' ? 1 : 0) - (b.status === 'completed' ? 1 : 0));
+
+    return (
+      <AnimatePresence>
+        {filteredTasks.map(task => (
+          <motion.div
+            key={task.id}
+            layout
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.25 }}
+          >
+            <div className="flex items-center justify-between h-16" style={{ opacity: task.status === "completed" ? 0.5 : 1 }}>
+              <div className="flex items-center space-x-3">
+                {task.visual.type === "iconify" ?
+                  <Icon icon={task.visual.iconName} className='size-8' /> :
+                  <img src={task.visual.src} alt="task" className="size-8 rounded-2xl" />
+                }
+                <div>
+                  <h1 className="font-semibold leading-tight">{task.title}</h1>
+                  <p className="text-muted-foreground leading-tight">+{task.reward}</p>
+                </div>
               </div>
+              {task.status === 'pending' && (
+                <Button size="sm" className="font-semibold" onClick={() => handleStart(task.id, task.type, task.link)}>
+                  Start
+                </Button>
+              )}
+              {task.status === 'loading' && (
+                <Button size="sm" className="font-semibold" disabled>
+                  <Loader className="animate-spin" />
+                </Button>
+              )}
+              {task.status === 'claimable' && (
+                <Button size="sm" className="font-semibold" onClick={() => handleClaim(task.id)}>
+                  Claim
+                </Button>
+              )}
+              {task.status === 'completed' && <Check size={24} />}
             </div>
-            {task.status === 'pending' && (
-              <Button size="sm" className="font-semibold" onClick={() => handleStart(task.id, task.type, task.link)}>
-                Start
-              </Button>
-            )}
-            {task.status === 'loading' && (
-              <Button size="sm" className="font-semibold" disabled>
-                <Loader className="animate-spin" />
-              </Button>
-            )}
-            {task.status === 'claimable' && (
-              <Button size="sm" className="font-semibold" onClick={() => handleClaim(task.id)}>
-                Claim
-              </Button>
-            )}
-            {task.status === 'completed' && <Check size={24} />}
-          </div>
-          <Separator />
-        </div>
-      ));
+            <Separator />
+          </motion.div>
+        ))}
+      </AnimatePresence>
+    );
   };
+
 
   return (
     <>

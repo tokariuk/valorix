@@ -1,4 +1,4 @@
-export const MAX_ENERGY = 100;
+export const MAX_ENERGY = 1000;
 export const ENERGY_REGEN_RATE = 1; // скільки одиниць енергії відновлюється за секунду
 export const BOOST_DURATION = 10 * 1000; // тривалість бусту в мілісекундах (10 секунд)
 export const BOOST_MULTIPLIER = 10;   // бонус за клік під час бусту
