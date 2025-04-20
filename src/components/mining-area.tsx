@@ -5,6 +5,7 @@ import { useGameStore } from '@/store/game-store'
 import { toast } from 'sonner'
 import { ZapOff } from 'lucide-react'
 import { BOOST_MULTIPLIER } from '@/constants/game-constants'
+import { v4 as uuidv4 } from 'uuid'; // або просто crypto.randomUUID()
 
 export const MiningArea = () => {
   const { click } = useGameStore();
@@ -21,7 +22,7 @@ export const MiningArea = () => {
     const clicked = click();
 
     if (clicked) {
-      setClicks((prev) => [...prev, { id: Date.now(), x, y, pointsToAdd }]);
+      setClicks((prev) => [...prev, { id: uuidv4(), x, y, pointsToAdd }]);
     } else {
       toast.dismiss()
       toast.error("Not enough energy!", { icon: <ZapOff size={20} /> });
