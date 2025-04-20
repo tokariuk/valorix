@@ -26,6 +26,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { DAILY_BOOST_LIMIT, BOOST_COOLDOWN, ENERGY_REGEN_RATE, BOOST_RESET_TIME } from '@/constants/game-constants';
 import Points from '@/components/points';
 import { useNavigate } from '@tanstack/react-router';
+import { toast } from 'sonner';
 
 export const Route = createFileRoute('/boosts')({
   component: Boosts,
@@ -71,6 +72,7 @@ function Boosts() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState<SelectedCard>(null);
   const [currentTime, setCurrentTime] = useState(Date.now());
+  const points = gameStore.points
 
   // Оновлення поточного часу кожну секунду для таймерів
   useEffect(() => {
@@ -111,20 +113,23 @@ function Boosts() {
       // Наприклад, Tap Power зростає за експоненційною шкалою
       const current = upgrade.level * upgrade.effect
       const nextIncrease = upgrade.effect
-      return { current, nextIncrease };
+      const price = upgrade.cost
+      return { current, nextIncrease, price };
     }
 
     else if (type === 'maxEnergy') {
       const current = gameStore.maxEnergy;
       const nextIncrease = upgrade.effect;
-      return { current, nextIncrease };
+      const price = upgrade.cost
+      return { current, nextIncrease, price };
     }
 
     else if (type === 'energyRegen') {
       // Наприклад, Energy Recovery збільшується вдвічі на кожному рівні
       const current = ENERGY_REGEN_RATE + upgrade.effect * (upgrade.level - 1);
       const nextIncrease = upgrade.effect
-      return { current, nextIncrease };
+      const price = upgrade.cost
+      return { current, nextIncrease, price };
     }
 
     return { current: 0, nextIncrease: 0 };
@@ -137,22 +142,20 @@ function Boosts() {
 
   // Для Tapping Guru: після активації редіректимо на головну
   const handleActivateTappingGuru = () => {
+    toast.success("Tapping Guru activated! Earn 10x points for 10 seconds");
     gameStore.activateTappingGuru();
     navigate({to: "/"})
     setDrawerOpen(false);
-    toast.success("Tapping Guru activated! Earn 10x points for 10 seconds");
   };
 
   // Для Full Tank: просто активуємо буст і закриваємо Drawer
   const handleActivateFullTank = () => {
+    toast.success("Full Tank activated! Energy fully restored");
     gameStore.activateFullTank();
     setDrawerOpen(false);
-    toast.success("Full Tank activated! Energy fully restored");
   };
 
   const handlePurchaseUpgrade = (upgradeType: 'pointsPerClick' | 'maxEnergy' | 'energyRegen') => {
-    gameStore.upgrade(upgradeType);
-    setDrawerOpen(false);
     if (upgradeType === "pointsPerClick") {
       toast.success("Tap Power upgraded! Earn more points with every tap");
     } else if (upgradeType === "maxEnergy") {
@@ -160,6 +163,8 @@ function Boosts() {
     } else if (upgradeType === "energyRegen") {
       toast.success("Energy Regen upgraded! Your energy will recover faster");
     }
+    gameStore.upgrade(upgradeType);
+    setDrawerOpen(false);
   };
 
   return (
@@ -219,7 +224,7 @@ function Boosts() {
                 </Button>
               )
             ) : selectedCard?.type === 'upgrade' ? (
-              <Button onClick={() => handlePurchaseUpgrade(selectedCard.key)}>
+              <Button disabled={points < getUpgradeInfo(selectedCard.key).price} onClick={() => handlePurchaseUpgrade(selectedCard.key)}>
                 Upgrade
               </Button>
             ) : null}
