@@ -111,7 +111,7 @@ export const useGameStore = create<GameState>()(
       click: () => {
         get().regenerateEnergy();
         let pointsEarn =
-          get().pointsPerTap + get().upgrades.pointsPerClick.effect * get().upgrades.pointsPerClick.level;
+          get().pointsPerTap;
         const energyCost = pointsEarn;
         if (!get().tappingGuruBoost.active && get().energy < energyCost) {
           console.warn('Недостатньо енергії');
@@ -294,6 +294,7 @@ export const useGameStore = create<GameState>()(
             effect: upgrade.effect,
           };
           let newMaxEnergy = state.maxEnergy;
+          let newPointsPerTap = state.pointsPerTap;
           if (type === 'maxEnergy') {
             newMaxEnergy = state.maxEnergy + upgrade.effect;
           }
@@ -313,7 +314,7 @@ export const useGameStore = create<GameState>()(
       },
     }),
     {
-      name: 'game-storage6',
+      name: 'game-storage8',
       partialize: (state) => ({
         points: state.points,
         energy: state.energy,

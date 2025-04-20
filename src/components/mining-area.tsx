@@ -4,15 +4,14 @@ import valorixCoin from "@/assets/mining-button.png"
 import { useGameStore } from '@/store/game-store'
 import { toast } from 'sonner'
 import { ZapOff } from 'lucide-react'
-import { BOOST_MULTIPLIER } from '@/constants/game-constants'
-import { v4 as uuidv4 } from 'uuid'; // або просто crypto.randomUUID()
+import { BOOST_MULTIPLIER, POINTS_PER_TAP } from '@/constants/game-constants'
 
 export const MiningArea = () => {
   const { click } = useGameStore();
   const [clicks, setClicks] = useState<{ id: number, x: number, y: number, pointsToAdd: number }[]>([]);
   const upgrades = useGameStore((state) => state.upgrades);
   const tappingGuruActive = useGameStore((state) => state.tappingGuruBoost.active)
-  const pointsToAdd = upgrades.pointsPerClick.effect * upgrades.pointsPerClick.level * (tappingGuruActive ? BOOST_MULTIPLIER : 1);
+  const pointsToAdd = useGameStore((state) => state.pointsPerTap)
   const [isPressed, setIsPressed] = useState(false);
 
   const handleMouseDown = () => setIsPressed(true);
@@ -22,7 +21,7 @@ export const MiningArea = () => {
     const clicked = click();
 
     if (clicked) {
-      setClicks((prev) => [...prev, { id: uuidv4(), x, y, pointsToAdd }]);
+      setClicks((prev) => [...prev, { id: Date.now() + Math.random() + Math.random(), x, y, pointsToAdd }]);
     } else {
       toast.dismiss()
       toast.error("Not enough energy!", { icon: <ZapOff size={20} /> });
