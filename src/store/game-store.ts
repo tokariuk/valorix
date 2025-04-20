@@ -290,7 +290,7 @@ export const useGameStore = create<GameState>()(
         set((state) => {
           const newUpgrade = {
             level: upgrade.level + 1,
-            cost: Math.floor(upgrade.cost * 1.05),
+            cost: Math.floor(upgrade.cost * 1.1),
             effect: upgrade.effect,
           };
           let newMaxEnergy = state.maxEnergy;
