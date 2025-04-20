@@ -315,7 +315,7 @@ export const useGameStore = create<GameState>()(
       },
     }),
     {
-      name: 'game-storage8',
+      name: 'game-storage9',
       partialize: (state) => ({
         points: state.points,
         energy: state.energy,

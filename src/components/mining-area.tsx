@@ -11,7 +11,7 @@ export const MiningArea = () => {
   const [clicks, setClicks] = useState<{ id: number, x: number, y: number, pointsToAdd: number }[]>([]);
   const upgrades = useGameStore((state) => state.upgrades);
   const tappingGuruActive = useGameStore((state) => state.tappingGuruBoost.active)
-  const pointsToAdd = useGameStore((state) => state.pointsPerTap)
+  const pointsToAdd = useGameStore((state) => state.pointsPerTap) * tappingGuruActive ? 10 : 1
   const [isPressed, setIsPressed] = useState(false);
 
   const handleMouseDown = () => setIsPressed(true);
