@@ -10,6 +10,7 @@ import {
   BOOST_COOLDOWN,
   RANK_THRESHOLDS,
   BOOST_RESET_TIME,
+  POINTS_PER_TAP,
 } from '@/constants/game-constants';
 import { ReactNode } from 'react';
 import { toast } from 'sonner';
@@ -53,6 +54,7 @@ interface GameState {
   points: number;
   energy: number;
   maxEnergy: number;
+  pointsPerTap: number;
   rank: number;
   upgrades: Record<UpgradeType, Upgrade>;
   tasks: Task[];
@@ -84,10 +86,11 @@ export const useGameStore = create<GameState>()(
       points: 0,
       energy: MAX_ENERGY,
       maxEnergy: MAX_ENERGY,
+      pointsPerTap: POINTS_PER_TAP,
       rank: 0,
       upgrades: {
-        pointsPerClick: { level: 1, cost: 150, effect: 5 },
-        maxEnergy: { level: 1, cost: 150, effect: 100 },
+        pointsPerClick: { level: 1, cost: 150, effect: 1 },
+        maxEnergy: { level: 1, cost: 150, effect: 125 },
         energyRegen: { level: 1, cost: 150, effect: 2.5 },
       },
       tasks: [],
@@ -108,7 +111,7 @@ export const useGameStore = create<GameState>()(
       click: () => {
         get().regenerateEnergy();
         let pointsEarn =
-          get().upgrades.pointsPerClick.effect * get().upgrades.pointsPerClick.level;
+          get().pointsPerTap + get().upgrades.pointsPerClick.effect * get().upgrades.pointsPerClick.level;
         const energyCost = pointsEarn;
         if (!get().tappingGuruBoost.active && get().energy < energyCost) {
           console.warn('Недостатньо енергії');
@@ -294,6 +297,9 @@ export const useGameStore = create<GameState>()(
           if (type === 'maxEnergy') {
             newMaxEnergy = state.maxEnergy + upgrade.effect;
           }
+          if (type === 'pointsPerClick') {
+            newPointsPerTap = state.pointsPerTap + upgrade.effect;
+          }
           return {
             points: state.points - upgrade.cost,
             upgrades: {
@@ -301,6 +307,7 @@ export const useGameStore = create<GameState>()(
               [type]: newUpgrade,
             },
             maxEnergy: newMaxEnergy,
+            pointsPerTap: newPointsPerTap,
           };
         });
       },
