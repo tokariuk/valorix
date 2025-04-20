@@ -7,7 +7,6 @@ import { useGameStore } from '@/store/game-store';
 import { createRootRoute, Outlet, useNavigate } from '@tanstack/react-router'
 import { useEffect, useRef, useState } from 'react';
 import gif from "@/assets/congrats.gif"
-import lastFrame from "@/assets/congrats_last_frame.png"
 
 if (window.visualViewport) {
   window.visualViewport.addEventListener('resize', () => {
@@ -31,20 +30,6 @@ export const Route = createRootRoute({
       return () => clearTimeout(timer);
     }, []);
 
-    const [isDone, setIsDone] = useState(false);
-
-    useEffect(() => {
-      if (points >= 15000) {
-        if (isLoading) return; // ще не час
-
-        const gifTimer = setTimeout(() => {
-          setIsDone(true);
-        }, 3000); // тривалість гіфки
-
-        return () => clearTimeout(gifTimer);
-      }
-    }, [points, isLoading]);
-
     return (
       <main className='flex flex-col p-3 gap-3 max-w-md mx-auto w-screen relative' style={{
         paddingTop: "calc(var(--tg-content-safe-area-inset-top) + var(--tg-safe-area-inset-top) + 0.75rem)",
@@ -66,7 +51,7 @@ export const Route = createRootRoute({
               <DialogContent>
                 <div className='relative w-full'>
                   <img
-                    src={isDone ? lastFrame : gif}
+                    src={gif}
                     alt="congrats"
                     className='size-28 mx-auto object-cover opacity-30'
                   />
