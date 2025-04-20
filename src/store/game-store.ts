@@ -89,9 +89,9 @@ export const useGameStore = create<GameState>()(
       pointsPerTap: POINTS_PER_TAP,
       rank: 0,
       upgrades: {
-        pointsPerClick: { level: 1, cost: 150, effect: 1 },
-        maxEnergy: { level: 1, cost: 150, effect: 125 },
-        energyRegen: { level: 1, cost: 150, effect: 2.5 },
+        pointsPerClick: { level: 1, cost: 100, effect: 1 },
+        maxEnergy: { level: 1, cost: 100, effect: 500 },
+        energyRegen: { level: 1, cost: 100, effect: 1 },
       },
       tasks: [],
       tappingGuruBoost: {
@@ -288,9 +288,10 @@ export const useGameStore = create<GameState>()(
           return;
         }
         set((state) => {
+          let priceMultiplier = upgrade.level === 1 ? 20 : 2
           const newUpgrade = {
             level: upgrade.level + 1,
-            cost: Math.floor(upgrade.cost * 1.1),
+            cost: Math.floor(upgrade.cost * priceMultiplier),
             effect: upgrade.effect,
           };
           let newMaxEnergy = state.maxEnergy;
