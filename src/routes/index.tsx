@@ -31,7 +31,7 @@ function Index() {
     return () => clearInterval(interval);
   }, [TappingGuruEndTime, isTappingGuruActive]);
 
-  return (<>
+  return (<div className="h-full">
     <div className='flex flex-col items-center mx-auto mt-6'>
       <p className='text-muted-foreground'>Balance:</p>
       <span className="text-3xl font-bold"><Points /></span>
@@ -57,5 +57,5 @@ function Index() {
         undefined
       }
     </div>
-  </>)
+  </div>)
 }

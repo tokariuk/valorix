@@ -47,7 +47,7 @@ function RouteComponent() {
     </div>
 
 
-    <div className='flex space-x-3 mb-3'>
+    <div className='flex space-x-3'>
       <Card className='flex-1 gap-1'>
         <CardHeader>
           <p className='text-xs text-muted-foreground'>Earn</p>
@@ -75,7 +75,7 @@ function RouteComponent() {
 
     <Separator />
 
-    <div className='flex space-x-3 my-3'>
+    <div className='flex space-x-3'>
       <Card className='flex-1 gap-1'>
         <CardHeader>
           <CardTitle className="flex gap-2 items-center"><Users size={18} strokeWidth={2.5} /> Total friends:</CardTitle>
@@ -161,6 +161,6 @@ function RouteComponent() {
 
     <div style={{
       height: "24px"
-    }} className='mt-6'/>
+    }} />
   </>);
 }

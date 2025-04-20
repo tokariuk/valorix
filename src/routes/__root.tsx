@@ -8,8 +8,6 @@ import { createRootRoute, Outlet, useNavigate } from '@tanstack/react-router'
 import { useEffect, useRef, useState } from 'react';
 import gif from "@/assets/congrats.gif"
 import lastFrame from "@/assets/congrats_last_frame.png"
-import { AnimatePresence, motion } from 'framer-motion';
-import { useLocation } from '@tanstack/react-router';
 
 if (window.visualViewport) {
   window.visualViewport.addEventListener('resize', () => {
@@ -25,7 +23,6 @@ export const Route = createRootRoute({
   component: () => {
     const [isLoading, setIsLoading] = useState(true);
     const points = useGameStore().points;
-    const location = useLocation();
 
     useEffect(() => {
       const timer = setTimeout(() => {
@@ -60,20 +57,7 @@ export const Route = createRootRoute({
           </div>
         )}
 
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={location.pathname}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className="min-h-full"
-          >
-            <Outlet />
-          </motion.div>
-        </AnimatePresence>
-
-
+        <Outlet />
         <NavigationMenu />
 
         {points >= 15000 && !isLoading ?
