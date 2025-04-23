@@ -109,7 +109,6 @@ export const useGameStore = create<GameState>()(
 
       // Обробка кліку. Якщо Tapping Guru активний – енергія не списується, а монети множаться.
       click: () => {
-        get().regenerateEnergy();
         let pointsEarn =
           get().pointsPerTap;
         const energyCost = pointsEarn;
@@ -299,7 +298,7 @@ export const useGameStore = create<GameState>()(
           if (type === 'maxEnergy') {
             newMaxEnergy = state.maxEnergy + upgrade.effect;
           }
-          if (type === 'pointsPerClick') {
+          else if (type === 'pointsPerClick') {
             newPointsPerTap = state.pointsPerTap + upgrade.effect;
           }
           return {
@@ -320,6 +319,7 @@ export const useGameStore = create<GameState>()(
         points: state.points,
         energy: state.energy,
         maxEnergy: state.maxEnergy,
+        pointsPerTap: state.pointsPerTap,
         rank: state.rank,
         upgrades: state.upgrades,
         tasks: state.tasks,
